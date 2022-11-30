@@ -79,6 +79,11 @@ usethis::use_package_doc()
 
 # GitHub
 usethis::use_git()
+
+usethis::use_git_remote("origin",
+                        url = "https://github.com/training-unhcr-n2/squirrelsbruno.git",
+                        overwrite = TRUE)
+
 # Add your credentials for GitHub
 gitcreds::gitcreds_set()
 # Send your project to a new GitHub project

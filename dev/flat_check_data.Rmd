@@ -8,6 +8,7 @@ editor_options:
 ```{r development, include=FALSE}
 library(testthat)
 
+
 ```
 
 ```{r development-load}
@@ -157,7 +158,114 @@ test_that("check_squirrel_data_integrity works",
 
 ```
   
+# study_activity
+    
+```{r function-study_activity}
+#' study_activity
+#' 
+#' The function will take a squirrel dataset and filter activity and observations data for a selecte primary fur color. 
+#' 
+#' @param dataframe
+#' @param object a character object for the primary fur color
+#' 
+#' @importFrom dplyr filter
+#' @importFrom glue glue
+#' @import ggplot2
+#' 
+#' 
+#' @return a dataset and a chart
+#' 
+#' @export
 
+study_activity <- function(df_squirrels_act, col_primary_fur_color) {
+  
+  stopifnot("df_squirrels_act is not a dataset" = is.data.frame(df_squirrels_act))
+  stopifnot("col_primary_fur_color is not a character object" = is.character(col_primary_fur_color))
+  
+  table <- df_squirrels_act %>% 
+    filter(col_primary_fur_color == primary_fur_color)
+    
+  graph <- table %>% 
+    ggplot() +
+    aes(x = activity, y = counts, fill = age) +
+    geom_col() +
+    labs(x = "Type of activity",
+         y = "Number of observations",
+         title = glue("Type of activity by age for {tolower(col_primary_fur_color)} squirrels")) +
+    scale_fill_manual(name = "Age",
+                      values = c("#00688B", "#00BFFF"))
+  
+  return(list(table = table, graph = graph))
+}
+```
+  
+```{r example-study_activity}
+
+data(data_act_squirrels)
+study_activity(df_squirrels_act = data_act_squirrels, 
+               col_primary_fur_color = "Gray")
+
+study_activity(df_squirrels_act = data_act_squirrels, 
+               col_primary_fur_color = "Black")
+```
+  
+```{r tests-study_activity}
+test_that("study_activity works", {
+  expect_true(inherits(study_activity, "function")) 
+})
+
+test_that("study_activity works",{
+  expect_error(
+    object = study_activity("grey","grey"),
+    regexp = "df_squirrels_act is not a dataset"
+  )
+})
+
+
+test_that("study_activity works",{
+  expect_error(
+    object = study_activity(data_act_squirrels,data_act_squirrels),
+    regexp = "col_primary_fur_color is not a character object"
+  )
+}
+)
+
+test_that("study_activity works",{
+  
+  output <- study_activity(df_squirrels_act = data_act_squirrels, 
+               col_primary_fur_color = "Gray")
+  
+  expect_is(output,"list")
+
+}
+)
+
+
+test_that("study_activity works",{
+  
+  output <- study_activity(df_squirrels_act = data_act_squirrels, 
+               col_primary_fur_color = "Gray")
+  
+  expect_s3_class(output$table,"data.frame")
+
+}
+)
+
+test_that("study_activity works",{
+  
+  output <- study_activity(df_squirrels_act = data_act_squirrels, 
+               col_primary_fur_color = "Gray")
+  
+  expect_s3_class(output$graph,"ggplot")
+
+}
+)
+
+
+```
+  
+
+# inflate package
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly

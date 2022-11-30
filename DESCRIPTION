@@ -10,7 +10,8 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
 Imports: 
-    glue
+    glue,
+    magrittr
 Suggests: 
     dplyr,
     knitr,
