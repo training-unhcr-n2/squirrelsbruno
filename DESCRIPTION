@@ -1,0 +1,24 @@
+Package: squirrelsbruno
+Title: Package Squirrels Observations
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Bruno", "Carayon", , "carayon@unhcr.org", role = c("aut", "cre")),
+    person("ThinkR", role = "cph")
+  )
+Description: Improve data analisis of Squirrels observations datasets.
+License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
+Imports: 
+    glue
+Suggests: 
+    dplyr,
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2

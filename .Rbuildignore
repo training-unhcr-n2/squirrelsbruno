@@ -1,0 +1,10 @@
+
+^dev$
+^LICENSE\.md$
+^squirrelsbruno\.Rproj$
+^\.Rproj\.user$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^data-raw$

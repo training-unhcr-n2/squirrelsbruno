@@ -1,0 +1,167 @@
+---
+title: "flat_check_data.Rmd"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# My function
+
+```{r function-check_data}
+
+#' check_primary_color_is_ok
+#'
+#' @return all_colors_OK: a character vector or error message 
+#' @param string : a character vector. The color of the squirrels.
+#' 
+#' @export
+#'
+#' @examples
+#' 
+check_primary_color_is_ok <- function(string) {
+  if(
+    all(
+    string %in% c("Gray", "Cinnamon", "Black", NA)
+  ))
+  {all_colors_OK <- string
+  return(all_colors_OK)
+  }
+   else{ stop("One or more color of the string color are not valid primary fur color")
+   }
+
+}
+
+```
+
+```{r examples-check_data}
+check_primary_color_is_ok( c("Gray", "Gray", "Black"))
+#check_primary_color_is_ok( c("Gray", "Gray","Brown"))
+```
+
+```{r tests-check_data}
+test_that("check_primary_color_is_ok works", {
+  expect_equal(check_primary_color_is_ok( c("Gray", "Gray", "Black")),c("Gray", "Gray", "Black"))
+ })
+ 
+ test_that("check_primary_color_is_ok error message works", {
+   expect_error(
+    object = check_primary_color_is_ok(c("Gray", "Gray","Brown")),
+    regexp = "One or more color of the string color are not valid primary fur color")
+  })
+
+```
+
+
+# check squirrel data integrity
+    
+```{r function-check_squirrel_data_integrity}
+#' check_squirrel_data_integrity
+#' 
+#' Description The function checks that the data contains a primary_fur_color column, and that this column contains only allowed colors 
+#' 
+#' @param dataset A dataset.
+#' @return a message if everything is OK
+#' 
+#' @export
+
+check_squirrel_data_integrity <- function(dataset){
+  
+  if (any(colnames(dataset)== "primary_fur_color"))
+ {
+    
+  vector_to_test <-   dataset[["primary_fur_color"]]
+    
+  if(all(
+   vector_to_test %in% c("Gray", "Cinnamon", "Black", NA)
+  ))
+ {
+   message(
+     "Everything is correct,  start analyse!")}
+ else{
+    stop("One or more color of the string color are not valid primary fur color")
+  }
+    
+ }
+  
+ else {
+  stop("Primary fur color is not present in the dataset")
+}
+  
+}
+
+
+
+```
+  
+```{r example-check_squirrel_data_integrity}
+check_squirrel_data_integrity(dataset = data_act_squirrels)
+
+# create dummy data 
+#the_data_bad <- data_act_squirrels 
+#the_data_bad<- dplyr::rename(the_data_bad, secondary_color = primary_fur_color )
+#check_squirrel_data_integrity(dataset = the_data_bad)
+
+
+```
+  
+```{r tests-check_squirrel_data_integrity}
+
+test_that("check_squirrel_data_integrity works", {
+  expect_true(inherits(check_squirrel_data_integrity, "function")) 
+})
+
+test_that("check_squirrel_data_integrity works",
+          {
+  expect_message(
+    object= check_squirrel_data_integrity(dataset = data_act_squirrels),
+    regexp = "Everything is correct,  start analyse!"
+  )
+          }
+)
+
+the_data_bad <- data_act_squirrels 
+the_data_bad<- dplyr::rename(the_data_bad, secondary_color = primary_fur_color )
+
+the_data_very_bad <- data_act_squirrels
+the_data_very_bad[["primary_fur_color"]][3] <- "violet"
+
+test_that("check_squirrel_data_integrity works",
+          {
+  expect_error(
+    object= check_squirrel_data_integrity(dataset = the_data_bad),
+    regexp = "Primary fur color is not present in the dataset"
+  )
+          }
+)
+
+
+
+test_that("check_squirrel_data_integrity works",
+          {
+  expect_error(
+    object= check_squirrel_data_integrity(dataset = the_data_very_bad),
+    regexp = "One or more color of the string color are not valid primary fur color"
+  )
+          }
+)
+
+```
+  
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_check_data.Rmd", vignette_name = "check-data",
+               overwrite = TRUE)
+```
+
