@@ -78,6 +78,7 @@ usethis::use_pipe()
 usethis::use_package_doc()
 
 # GitHub
+usethis::use_git()
 # Add your credentials for GitHub
 gitcreds::gitcreds_set()
 # Send your project to a new GitHub project
